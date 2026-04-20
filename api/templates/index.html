@@ -15,6 +15,7 @@
     <header>
         <h1>IPL 2026<span>Winner Prediction</span></h1>
         <div id="last-updated" style="font-size: 0.7rem; color: #00ff00; opacity: 0.6; margin-top: 10px;">Syncing with live feed...</div>
+        <div id="match-status" style="font-size: 0.7rem; color: var(--ipl-gold); opacity: 0.8; margin-top: 5px; font-weight: 700;">Awaiting Match Result...</div>
     </header>
 
     <nav>
@@ -106,6 +107,7 @@
                 
                 // Update Timestamp
                 document.getElementById('last-updated').innerText = `LAST UPDATED: ${data.updated}`;
+                document.getElementById('match-status').innerText = data.match_status.toUpperCase();
                 
                 // Update Hero
                 const winner = data.top_5[0];
