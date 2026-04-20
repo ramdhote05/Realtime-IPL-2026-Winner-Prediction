@@ -126,8 +126,13 @@
                 const response = await fetch('/api/data');
                 const data = await response.json();
                 document.getElementById('last-updated').innerText = `LAST UPDATED: ${data.updated}`;
+                const indicator = document.querySelector('.live-indicator');
+                if (indicator) indicator.innerHTML = `<div class="dot" style="background: ${data.day_offset > 0 ? '#00ff00' : '#ff822a'}"></div>${data.match_status}`;
+                
                 document.getElementById('champion-main').innerText = data.top_5[0].team;
-                document.getElementById('champion-description').innerText = `${data.top_5[0].team} leads the table after ${data.day_offset} days of simulation.`;
+                document.getElementById('champion-description').innerText = data.day_offset > 0 
+                    ? `${data.top_5[0].team} currently leads the standings after ${data.day_offset} simulation cycles.` 
+                    : `${data.top_5[0].team} leads from the official baseline standings.`;
                 document.getElementById('champion-analysis').innerText = data.top_5[0].team;
                 document.getElementById('prob-indicator').innerText = `EXPECTED WIN PROBABILITY: ${data.top_5[0].prob}%`;
                 
