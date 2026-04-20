@@ -77,7 +77,7 @@
                 <strong>HOW:</strong> Data is synchronized through our server-side "Season Progressor" to maintain 100% accuracy with the current standings.
             </p>
             <table class="pts-table">
-                <thead><tr><th>POS</th><th>TEAM</th><th>P</th><th>W</th><th>L</th><th>NRR</th><th>PTS</th></tr></thead>
+                <thead><tr><th>POS</th><th>TEAM</th><th>P</th><th>W</th><th>L</th><th>D</th><th>NRR</th><th>PTS</th></tr></thead>
                 <tbody id="full-points-body"></tbody>
             </table>
         </section>
@@ -140,7 +140,7 @@
                 const ptsBody = document.getElementById('full-points-body');
                 ptsBody.innerHTML = '';
                 data.points_table.forEach((team, index) => {
-                    ptsBody.innerHTML += `<tr><td>${index + 1}</td><td style="font-weight: 700;">${team.team}</td><td>${team.p}</td><td>${team.w}</td><td>${team.l}</td><td class="${team.nrr >= 0 ? 'nrr-pos' : 'nrr-neg'}">${team.nrr >= 0 ? '+' : ''}${team.nrr.toFixed(3)}</td><td style="color: var(--ipl-gold); font-weight: 900;">${team.w * 2}</td></tr>`;
+                    ptsBody.innerHTML += `<tr><td>${index + 1}</td><td style="font-weight: 700;">${team.team}</td><td>${team.p}</td><td>${team.w}</td><td>${team.l}</td><td>${team.d}</td><td class="${team.nrr >= 0 ? 'nrr-pos' : 'nrr-neg'}">${team.nrr >= 0 ? '+' : ''}${team.nrr.toFixed(3)}</td><td style="color: var(--ipl-gold); font-weight: 900;">${team.pts}</td></tr>`;
                 });
 
                 const fixes = document.getElementById('fixtures-container');
