@@ -1,0 +1,6 @@
+IPL.csv
+cleaned_matches.csv
+*.pkl
+__pycache__/
+*.pyc
+.env
