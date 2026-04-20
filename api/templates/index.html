@@ -3,11 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IPL 2026 Winner Prediction | Real-Time Sync</title>
+    <title>IPL 2026 Winner Prediction | Season Live Tracker</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        .pts-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(20, 20, 25, 0.4);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .pts-table th, .pts-table td {
+            padding: 1.5rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        }
+        .pts-table th {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--ipl-gold);
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+        }
+        .pts-table tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+        .nrr-pos { color: #00ff00; }
+        .nrr-neg { color: #ff4d4d; }
+    </style>
 </head>
 <body>
     <div class="overlay"></div>
@@ -15,13 +42,13 @@
     <header>
         <h1>IPL 2026<span>Winner Prediction</span></h1>
         <div id="last-updated" style="font-size: 0.7rem; color: #00ff00; opacity: 0.6; margin-top: 10px;">Syncing with live feed...</div>
-        <div id="match-status" style="font-size: 0.7rem; color: var(--ipl-gold); opacity: 0.8; margin-top: 5px; font-weight: 700;">Awaiting Match Result...</div>
     </header>
 
     <nav>
         <button class="nav-btn active" onclick="showSection('win-analysis')">Winner Analysis</button>
-        <button class="nav-btn" onclick="showSection('top-5')">Top 5 Contenders</button>
-        <button class="nav-btn" onclick="showSection('challengers')">The Challengers</button>
+        <button class="nav-btn" onclick="showSection('top-5')">Top 5</button>
+        <button class="nav-btn" onclick="showSection('points-table')">Points Table</button>
+        <button class="nav-btn" onclick="showSection('challengers')">Challengers</button>
     </nav>
 
     <div class="main-container">
@@ -29,69 +56,73 @@
         <section class="winner-section" id="live-header" style="background: rgba(20,20,25,0.8); padding: 3rem; border-radius: 40px; border: 1px solid rgba(255,255,255,0.05); text-align: center; margin-bottom: 2rem;">
             <div class="live-indicator">
                 <div class="dot"></div>
-                LIVE 2026 REAL-TIME SYNC
+                SEASON AUTOMATION ACTIVE
             </div>
             <br>
             <div class="winner-badge" style="margin-top: 1rem;">Projected League Champion</div>
             <h2 id="champion-main" style="font-size: 3.5rem; font-weight: 900; margin: 1rem 0;">-</h2>
             <p id="champion-description" style="opacity: 0.7; font-size: 1.1rem; max-width: 700px; margin: 10px auto;">
-                Initializing neural synchronization...
+                Initializing season synchronization...
             </p>
         </section>
 
         <!-- SECTION 1: Winner Analysis -->
         <main id="win-analysis" class="content-section active">
             <div class="analysis-card">
-                <div class="winner-badge">2026 Momentum Leader</div>
+                <div class="winner-badge">Prediction Engine</div>
                 <h2 id="champion-analysis" style="font-size: 4rem; font-weight: 900; margin-bottom: 2rem; color: #fff;">-</h2>
-                
                 <div class="analysis-grid">
                     <div class="analysis-item">
-                        <h4>Current Standing</h4>
-                        <p id="standing-text" style="opacity: 0.8; line-height: 1.6;">-</p>
-                    </div>
-                    <div class="analysis-item">
-                        <h4>Efficiency Peak</h4>
-                        <p id="efficiency-text" style="opacity: 0.8; line-height: 1.6;">Calculated based on real-time win/loss ratio in the 2026 season.</p>
+                        <h4>Simulation Status</h4>
+                        <p style="opacity: 0.8; line-height: 1.6;">Currently processing automated standings progression based on today's date in the 2026 IPL Schedule.</p>
                     </div>
                 </div>
-                
                 <div style="margin-top: 3rem; text-align: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 2rem;">
-                    <h3 id="prob-indicator" style="color: var(--ipl-gold);">EXPECTED WIN PROBABILITY: -</h3>
+                    <h3 id="prob-indicator" style="color: var(--ipl-gold);">PROBABILITY: -</h3>
                 </div>
             </div>
         </main>
 
-        <!-- SECTION 2: Top 5 Teams -->
+        <!-- SECTION 2: Top 5 -->
         <section id="top-5" class="content-section">
-            <h2 style="text-align: center; margin-bottom: 2rem; color: var(--ipl-gold);">2026 Live Leaderboard</h2>
-            <div class="top-4-grid" id="top-5-grid">
-                <!-- Dynamic Content -->
-            </div>
+            <div class="top-4-grid" id="top-5-grid"></div>
         </section>
 
-        <!-- SECTION 3: The Challengers -->
-        <section id="challengers" class="content-section">
-            <h2 style="text-align: center; margin-bottom: 2rem; color: #ff822a;">Mathematical Contenders</h2>
-            <div class="top-4-grid" id="challengers-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
-                <!-- Dynamic Content -->
-            </div>
+        <!-- SECTION 3: Points Table (NEW) -->
+        <section id="points-table" class="content-section">
+            <h2 style="text-align: center; margin-bottom: 2rem; color: var(--ipl-gold);">Live Season Points Table</h2>
+            <table class="pts-table">
+                <thead>
+                    <tr>
+                        <th>POS</th>
+                        <th>TEAM</th>
+                        <th>P</th>
+                        <th>W</th>
+                        <th>L</th>
+                        <th>NRR</th>
+                        <th>PTS</th>
+                    </tr>
+                </thead>
+                <tbody id="full-points-body">
+                    <!-- Dynamic Rows -->
+                </tbody>
+            </table>
+        </section>
 
-            <!-- ULTIMATE VERDICT -->
+        <!-- SECTION 4: Challengers -->
+        <section id="challengers" class="content-section">
+            <div class="top-4-grid" id="challengers-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));"></div>
             <div class="analysis-card" style="margin-top: 4rem; border: 2px solid var(--ipl-gold); text-align: center;">
                 <div class="winner-badge" style="background: linear-gradient(135deg, #ffd700, #ff8c00);">THE ULTIMATE VERDICT</div>
                 <h2 id="final-winner-verdict" style="font-size: 3rem; margin: 1.5rem 0;">-</h2>
                 <p style="opacity: 0.7; max-width: 800px; margin: 0 auto; line-height: 1.8;">
-                    Every refresh re-evaluates the 2026 momentum and mathematical survival rates. The model identifies the team above as the most statistically inevitable champion as of this exact moment.
+                    This verdict is update automatically after every simulated or real match day in the 2026 season.
                 </p>
             </div>
         </section>
 
         <!-- FOOTER -->
         <div class="footer-info">
-            <p style="margin-bottom: 1rem; opacity: 0.6;">
-                Engine synchronized with Live Standings. Automatic daily updates enabled.
-            </p>
             <div style="opacity: 0.4; font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase;">
                 Developed by RAM DHOTE<br>
                 © 2026 IPL Winner Prediction Engine™ • All Rights Reserved
@@ -105,35 +136,48 @@
                 const response = await fetch('/api/data');
                 const data = await response.json();
                 
-                // Update Timestamp
                 document.getElementById('last-updated').innerText = `LAST UPDATED: ${data.updated}`;
-                document.getElementById('match-status').innerText = data.match_status.toUpperCase();
                 
-                // Update Hero
                 const winner = data.top_5[0];
                 document.getElementById('champion-main').innerText = winner.team;
-                document.getElementById('champion-description').innerText = `Synchronized with 2026 standings. ${winner.team} currently lead with a ${winner.status} record.`;
+                document.getElementById('champion-description').innerText = `${winner.team} leads the table at Day ${data.day_offset} of the automated 2026 season.`;
                 
-                // Update Analysis
                 document.getElementById('champion-analysis').innerText = winner.team;
-                document.getElementById('standing-text').innerText = `Ranked #1 with ${winner.status} record. Momentum: High.`;
                 document.getElementById('prob-indicator').innerText = `EXPECTED WIN PROBABILITY: ${winner.prob}%`;
                 
-                // Update Top 5 Grid
+                // Top 5
                 const top5Grid = document.getElementById('top-5-grid');
                 top5Grid.innerHTML = '';
                 data.top_5.forEach((item, index) => {
                     top5Grid.innerHTML += `
                         <div class="analysis-card" style="border-left: 5px solid ${item.color}; position: relative;">
                             <div class="rank-badge">${index + 1}</div>
-                            <h3 style="color: ${item.color == '#ffff00' ? '#ffff00' : '#fff'}">${item.team}</h3>
+                            <h3>${item.team}</h3>
                             <div class="win-index">${item.prob}%</div>
-                            <p style="opacity: 0.6; margin-top: 1rem;">Status: ${item.status}</p>
+                            <p style="opacity: 0.6; margin-top: 1rem;">Record: ${item.status}</p>
                         </div>
                     `;
                 });
 
-                // Update Challengers
+                // Points Table
+                const ptsBody = document.getElementById('full-points-body');
+                ptsBody.innerHTML = '';
+                data.points_table.forEach((team, index) => {
+                    const nrrClass = team.nrr >= 0 ? 'nrr-pos' : 'nrr-neg';
+                    ptsBody.innerHTML += `
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td style="font-weight: 700;">${team.team}</td>
+                            <td>${team.p}</td>
+                            <td>${team.w}</td>
+                            <td>${team.l}</td>
+                            <td class="${nrrClass}">${team.nrr >= 0 ? '+' : ''}${team.nrr.toFixed(3)}</td>
+                            <td style="color: var(--ipl-gold); font-weight: 900;">${team.w * 2}</td>
+                        </tr>
+                    `;
+                });
+
+                // Challengers
                 const challengersGrid = document.getElementById('challengers-grid');
                 challengersGrid.innerHTML = '';
                 data.challengers.forEach(item => {
@@ -148,7 +192,7 @@
                 document.getElementById('final-winner-verdict').innerText = data.verdict;
 
             } catch (error) {
-                console.error("Real-time sync failed. Using offline projection.", error);
+                console.error("Real-time sync failed.", error);
             }
         }
 
@@ -162,7 +206,6 @@
             });
         }
 
-        // Run fetch on load
         fetchRealTimeData();
     </script>
 </body>
