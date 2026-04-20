@@ -18,6 +18,8 @@
         .vs-circle { background: var(--ipl-gold); color: #000; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.7rem; }
         .sec-desc { text-align: center; max-width: 800px; margin: 0 auto 3rem auto; opacity: 0.6; line-height: 1.8; font-size: 1rem; }
         .sec-desc strong { color: var(--ipl-gold); }
+        .footer-link { color: var(--ipl-gold); text-decoration: none; font-weight: 700; transition: opacity 0.3s; }
+        .footer-link:hover { opacity: 0.7; }
     </style>
 </head>
 <body>
@@ -62,7 +64,7 @@
         <!-- TOP 5 -->
         <section id="top-5" class="content-section">
             <p class="sec-desc">
-                <strong>WHY:</strong> These teams hold the highest "Season Alpha" scores. This ranking reflects the 5 franchises most likely to secure a semi-final berth 
+                <strong>WHY:</strong> These teams hold the highest "Season Alpha" scores. This ranking reflects the 5 franchises most likely to secure a semi-final berth.
                 <strong>WHEN:</strong> Probabilities shift dynamically based on every match day's performance and NRR volatility.
             </p>
             <div class="top-4-grid" id="top-5-grid"></div>
@@ -96,13 +98,26 @@
                 <strong>WHY:</strong> Each team shows the specific probability of them staging a late-season comeback to qualify for the playoffs.
             </p>
             <div class="top-4-grid" id="challengers-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));"></div>
+            
             <div class="analysis-card" style="margin-top: 4rem; border: 2px solid var(--ipl-gold); text-align: center;">
-                <div class="winner-badge">THE ULTIMATE VERDICT</div>
-                <h2 id="final-winner-verdict" style="font-size: 3rem; margin: 1.5rem 0;">-</h2>
+                <div class="winner-badge" style="background: var(--ipl-gold); color: #000;">THE ULTIMATE VERDICT</div>
+                <h2 id="final-winner-verdict" style="font-size: 4rem; font-weight: 900; margin: 1.5rem 0; text-transform: uppercase;">-</h2>
+                <p style="opacity: 0.7; max-width: 800px; margin: 0 auto; line-height: 2; font-size: 1.1rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 2rem;">
+                    Based on the cumulative AI analysis of 2026 season momentum, team balance, and playoff history, the team above is <strong>statistically the most likely</strong> to secure the championship trophy.
+                </p>
             </div>
         </section>
 
-        <div class="footer-info"><div style="opacity: 0.4; font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase;">Developed by RAM DHOTE</div></div>
+        <!-- FOOTER -->
+        <div class="footer-info" style="margin-top: 6rem; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 3rem;">
+            <div style="margin-bottom: 1.5rem;">
+                <a href="https://github.com/ramdhote05" class="footer-link" target="_blank">GITHUB PROFILE: ramdhote05</a>
+            </div>
+            <div style="opacity: 0.4; font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; line-height: 2;">
+                Developed by RAM DHOTE<br>
+                © 2026 IPL Winner Prediction Engine™ • All Rights Reserved
+            </div>
+        </div>
     </div>
 
     <script>
