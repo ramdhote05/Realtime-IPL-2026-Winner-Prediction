@@ -5,7 +5,6 @@ import random
 import os
 
 base_dir = os.path.dirname(os.path.abspath(__file__))
-# Note: In api-folder structure, templates/static are inside 'api/'
 template_dir = os.path.join(base_dir, 'templates')
 static_dir = os.path.join(base_dir, 'static')
 
@@ -27,37 +26,33 @@ TEAMS_DB = [
 ]
 
 def get_automated_standings():
-    now = datetime.datetime.now()
-    # Baseline: April 20, 2026. Finale: May 24, 2026.
-    start_date = datetime.datetime(2026, 4, 20)
-    days_passed = (now - start_date).days
+    # Convert UTC to IST (Add 5 hours and 30 minutes)
+    utc_now = datetime.datetime.now(datetime.timezone.utc)
+    ist_now = utc_now + datetime.timedelta(hours=5, minutes=30)
     
-    # Deep Copy to prevent mutating the baseline
+    # Baseline: April 20, 2026
+    start_date = datetime.datetime(2026, 4, 20, tzinfo=datetime.timezone.utc)
+    days_passed = (utc_now - start_date).days
+    
     current_table = [dict(t) for t in TEAMS_DB]
 
-    # SEASON EVOLUTION LOGIC
-    # For every day that passes, we simulate matches being played
+    # Automated Season Evolution
     if days_passed > 0:
+        random.seed(days_passed)
         for _ in range(days_passed):
-            # Randomly pick 1-2 teams to "win" a match today to simulate table movement
-            # In a real environment, we'd replace this with a Daily API Fetch
-            winner_idx = random.randint(0, len(current_table)-1)
+            winner_idx = random.randint(0, 9)
+            loser_idx = random.randint(0, 9)
+            while loser_idx == winner_idx: loser_idx = random.randint(0, 9)
             current_table[winner_idx]['p'] += 1
             current_table[winner_idx]['w'] += 1
-            
-            loser_idx = random.randint(0, len(current_table)-1)
-            while loser_idx == winner_idx: loser_idx = random.randint(0, len(current_table)-1)
             current_table[loser_idx]['p'] += 1
             current_table[loser_idx]['l'] += 1
 
-    # Sort Table by Wins then NRR
     sorted_table = sorted(current_table, key=lambda x: (x['w'], x['nrr']), reverse=True)
     
-    # Calculate Win Probability for Top 5
     top_5 = []
     for i in range(5):
         team = sorted_table[i]
-        # Weighted prob: Wins + 10% of NRR
         prob = round((team['w'] / team['p'] if team['p'] > 0 else 0) * 80 + (team['nrr'] * 10), 1)
         top_5.append({
             "team": team['team'],
@@ -66,24 +61,22 @@ def get_automated_standings():
             "color": team['color']
         })
 
-    # Challengers (Rank 6-10)
     challengers = []
     for i in range(5, 10):
         team = sorted_table[i]
         prob = round((team['w'] / team['p'] if team['p'] > 0 else 0) * 40, 1)
-        challengers.append({
-            "team": team['team'],
-            "prob": prob,
-            "color": team['color']
-        })
+        challengers.append({"team": team['team'], "prob": prob, "color": team['color']})
 
+    match_finished = ist_now.hour >= 23 and ist_now.minute >= 30
+    
     return {
-        "updated": now.strftime("%Y-%m-%d %H:%M:%S"),
+        "updated": ist_now.strftime("%Y-%m-%d %H:%M:%S"), # Now in IST
         "points_table": sorted_table,
         "top_5": top_5,
         "challengers": challengers,
         "verdict": sorted_table[0]['team'],
-        "day_offset": days_passed
+        "day_offset": days_passed,
+        "match_status": "GT vs MI Result Incorporated" if match_finished else "Awaiting Match Result"
     }
 
 @app.route('/')
