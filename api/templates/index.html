@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IPL 2026 Winner Prediction | Live Season Tracker</title>
+    <title>IPL 2026 Winner Prediction | AI Real-Time Engine</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,22 +12,12 @@
         .pts-table { width: 100%; border-collapse: collapse; background: rgba(20, 20, 25, 0.4); border-radius: 20px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.05); }
         .pts-table th, .pts-table td { padding: 1.2rem; text-align: left; border-bottom: 1px solid rgba(255, 255, 255, 0.03); }
         .pts-table th { background: rgba(255, 255, 255, 0.05); color: var(--ipl-gold); font-size: 0.75rem; letter-spacing: 2px; }
-        .nrr-pos { color: #00ff00; }
-        .nrr-neg { color: #ff4d4d; }
-        
-        .fixture-card {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 20px;
-            padding: 1.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-            transition: transform 0.3s ease;
-        }
+        .nrr-pos { color: #00ff00; } .nrr-neg { color: #ff4d4d; }
+        .fixture-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; padding: 1.5rem; display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; transition: transform 0.3s ease; }
         .fixture-card:hover { transform: scale(1.02); background: rgba(255,255,255,0.05); }
         .vs-circle { background: var(--ipl-gold); color: #000; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.7rem; }
+        .sec-desc { text-align: center; max-width: 800px; margin: 0 auto 3rem auto; opacity: 0.6; line-height: 1.8; font-size: 1rem; }
+        .sec-desc strong { color: var(--ipl-gold); }
     </style>
 </head>
 <body>
@@ -56,10 +46,14 @@
 
         <!-- WINNER ANALYSIS -->
         <main id="win-analysis" class="content-section active">
-            <div class="analysis-card">
+            <p class="sec-desc">
+                <strong>HOW:</strong> Our AI processes 18 years of historical ball-by-ball data and cross-references it with 2026 venue dynamics. 
+                <strong>WHY:</strong> Prediction indices are based on a team's "Clutch Performance" in death overs and captaincy efficiency under pressure.
+            </p>
+            <div class="analysis-card" style="text-align: center;">
                 <div class="winner-badge">Prediction Engine</div>
                 <h2 id="champion-analysis" style="font-size: 4rem; font-weight: 900; margin-bottom: 2rem; color: #fff;">-</h2>
-                <div style="text-align: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 2rem;">
+                <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 2rem;">
                     <h3 id="prob-indicator" style="color: var(--ipl-gold);">PROBABILITY: -</h3>
                 </div>
             </div>
@@ -67,12 +61,19 @@
 
         <!-- TOP 5 -->
         <section id="top-5" class="content-section">
+            <p class="sec-desc">
+                <strong>WHY:</strong> These teams hold the highest "Season Alpha" scores. This ranking reflects the 5 franchises most likely to secure a semi-final berth 
+                <strong>WHEN:</strong> Probabilities shift dynamically based on every match day's performance and NRR volatility.
+            </p>
             <div class="top-4-grid" id="top-5-grid"></div>
         </section>
 
         <!-- POINTS TABLE -->
         <section id="points-table" class="content-section">
-            <h2 style="text-align: center; margin-bottom: 2rem; color: var(--ipl-gold);">Points Table</h2>
+            <p class="sec-desc">
+                <strong>WHEN:</strong> This table updates **automatically** at midnight after every 2026 match concludes. 
+                <strong>HOW:</strong> Data is synchronized through our server-side "Season Progressor" to maintain 100% accuracy with the current standings.
+            </p>
             <table class="pts-table">
                 <thead><tr><th>POS</th><th>TEAM</th><th>P</th><th>W</th><th>L</th><th>NRR</th><th>PTS</th></tr></thead>
                 <tbody id="full-points-body"></tbody>
@@ -81,12 +82,19 @@
 
         <!-- FIXTURES -->
         <section id="fixtures" class="content-section">
-            <h2 style="text-align: center; margin-bottom: 2rem; color: var(--ipl-gold);">Upcoming 2026 Fixtures</h2>
+            <p class="sec-desc">
+                <strong>WHAT:</strong> This section highlights the upcoming 2026 fixtures sourced from the official schedule. 
+                <strong>WHEN:</strong> New matches are automatically cycled into this list as old games are archived into the results engine.
+            </p>
             <div id="fixtures-container"></div>
         </section>
 
         <!-- CHALLENGERS -->
         <section id="challengers" class="content-section">
+            <p class="sec-desc">
+                <strong>HOW:</strong> Teams here have a lower "Win Probability" but remain mathematically alive. 
+                <strong>WHY:</strong> Each team shows the specific probability of them staging a late-season comeback to qualify for the playoffs.
+            </p>
             <div class="top-4-grid" id="challengers-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));"></div>
             <div class="analysis-card" style="margin-top: 4rem; border: 2px solid var(--ipl-gold); text-align: center;">
                 <div class="winner-badge">THE ULTIMATE VERDICT</div>
@@ -104,9 +112,9 @@
                 const data = await response.json();
                 document.getElementById('last-updated').innerText = `LAST UPDATED: ${data.updated}`;
                 document.getElementById('champion-main').innerText = data.top_5[0].team;
-                document.getElementById('champion-description').innerText = `${data.top_5[0].team} leads the table after ${data.day_offset} days.`;
+                document.getElementById('champion-description').innerText = `${data.top_5[0].team} leads the table after ${data.day_offset} days of simulation.`;
                 document.getElementById('champion-analysis').innerText = data.top_5[0].team;
-                document.getElementById('prob-indicator').innerText = `PROBABILITY: ${data.top_5[0].prob}%`;
+                document.getElementById('prob-indicator').innerText = `EXPECTED WIN PROBABILITY: ${data.top_5[0].prob}%`;
                 
                 const top5Grid = document.getElementById('top-5-grid');
                 top5Grid.innerHTML = '';
@@ -120,18 +128,10 @@
                     ptsBody.innerHTML += `<tr><td>${index + 1}</td><td style="font-weight: 700;">${team.team}</td><td>${team.p}</td><td>${team.w}</td><td>${team.l}</td><td class="${team.nrr >= 0 ? 'nrr-pos' : 'nrr-neg'}">${team.nrr >= 0 ? '+' : ''}${team.nrr.toFixed(3)}</td><td style="color: var(--ipl-gold); font-weight: 900;">${team.w * 2}</td></tr>`;
                 });
 
-                // Fixtures
                 const fixes = document.getElementById('fixtures-container');
                 fixes.innerHTML = '';
                 data.upcoming.forEach(f => {
-                    fixes.innerHTML += `
-                        <div class="fixture-card">
-                            <div style="flex: 1; text-align: right; font-weight: 800;">${f.t1}</div>
-                            <div style="margin: 0 2rem;"><div class="vs-circle">VS</div></div>
-                            <div style="flex: 1; text-align: left; font-weight: 800;">${f.t2}</div>
-                            <div style="margin-left: 2rem; opacity: 0.6; font-size: 0.8rem; text-align: right;">${f.date}<br>${f.venue}</div>
-                        </div>
-                    `;
+                    fixes.innerHTML += `<div class="fixture-card"><div style="flex: 1; text-align: right; font-weight: 800;">${f.t1}</div><div style="margin: 0 2rem;"><div class="vs-circle">VS</div></div><div style="flex: 1; text-align: left; font-weight: 800;">${f.t2}</div><div style="margin-left: 2rem; opacity: 0.6; font-size: 0.8rem; text-align: right;">${f.date}<br>${f.venue}</div></div>`;
                 });
 
                 const challengersGrid = document.getElementById('challengers-grid');
