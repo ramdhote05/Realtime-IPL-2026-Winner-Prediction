@@ -3,131 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IPL 2026 Winner Prediction | Season Live Tracker</title>
+    <title>IPL 2026 Winner Prediction | Live Season Tracker</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        .pts-table {
-            width: 100%;
-            border-collapse: collapse;
-            background: rgba(20, 20, 25, 0.4);
-            border-radius: 20px;
-            overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        .pts-table th, .pts-table td {
-            padding: 1.5rem;
-            text-align: left;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-        }
-        .pts-table th {
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--ipl-gold);
-            text-transform: uppercase;
-            font-size: 0.8rem;
-            letter-spacing: 2px;
-        }
-        .pts-table tr:hover {
-            background: rgba(255, 255, 255, 0.02);
-        }
+        .pts-table { width: 100%; border-collapse: collapse; background: rgba(20, 20, 25, 0.4); border-radius: 20px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.05); }
+        .pts-table th, .pts-table td { padding: 1.2rem; text-align: left; border-bottom: 1px solid rgba(255, 255, 255, 0.03); }
+        .pts-table th { background: rgba(255, 255, 255, 0.05); color: var(--ipl-gold); font-size: 0.75rem; letter-spacing: 2px; }
         .nrr-pos { color: #00ff00; }
         .nrr-neg { color: #ff4d4d; }
+        
+        .fixture-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 20px;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            transition: transform 0.3s ease;
+        }
+        .fixture-card:hover { transform: scale(1.02); background: rgba(255,255,255,0.05); }
+        .vs-circle { background: var(--ipl-gold); color: #000; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.7rem; }
     </style>
 </head>
 <body>
     <div class="overlay"></div>
-    
     <header>
         <h1>IPL 2026<span>Winner Prediction</span></h1>
-        <div id="last-updated" style="font-size: 0.7rem; color: #00ff00; opacity: 0.6; margin-top: 10px;">Syncing with live feed...</div>
+        <div id="last-updated" style="font-size: 0.75rem; color: #00ff00; opacity: 0.6; margin-top: 10px;">Syncing...</div>
     </header>
 
     <nav>
-        <button class="nav-btn active" onclick="showSection('win-analysis')">Winner Analysis</button>
+        <button class="nav-btn active" onclick="showSection('win-analysis')">Analysis</button>
         <button class="nav-btn" onclick="showSection('top-5')">Top 5</button>
-        <button class="nav-btn" onclick="showSection('points-table')">Points Table</button>
+        <button class="nav-btn" onclick="showSection('points-table')">Table</button>
+        <button class="nav-btn" onclick="showSection('fixtures')">Fixtures</button>
         <button class="nav-btn" onclick="showSection('challengers')">Challengers</button>
     </nav>
 
     <div class="main-container">
-        <!-- LIVE STATUS HEADER -->
+        <!-- LIVE HEADER -->
         <section class="winner-section" id="live-header" style="background: rgba(20,20,25,0.8); padding: 3rem; border-radius: 40px; border: 1px solid rgba(255,255,255,0.05); text-align: center; margin-bottom: 2rem;">
-            <div class="live-indicator">
-                <div class="dot"></div>
-                SEASON AUTOMATION ACTIVE
-            </div>
-            <br>
-            <div class="winner-badge" style="margin-top: 1rem;">Projected League Champion</div>
+            <div class="live-indicator"><div class="dot"></div>REAL-TIME SEASON SYNC</div><br>
+            <div class="winner-badge" style="margin-top: 1rem;">Projected Champion</div>
             <h2 id="champion-main" style="font-size: 3.5rem; font-weight: 900; margin: 1rem 0;">-</h2>
-            <p id="champion-description" style="opacity: 0.7; font-size: 1.1rem; max-width: 700px; margin: 10px auto;">
-                Initializing season synchronization...
-            </p>
+            <p id="champion-description" style="opacity: 0.7; font-size: 1.1rem; max-width: 700px; margin: 10px auto;">Initializing...</p>
         </section>
 
-        <!-- SECTION 1: Winner Analysis -->
+        <!-- WINNER ANALYSIS -->
         <main id="win-analysis" class="content-section active">
             <div class="analysis-card">
                 <div class="winner-badge">Prediction Engine</div>
                 <h2 id="champion-analysis" style="font-size: 4rem; font-weight: 900; margin-bottom: 2rem; color: #fff;">-</h2>
-                <div class="analysis-grid">
-                    <div class="analysis-item">
-                        <h4>Simulation Status</h4>
-                        <p style="opacity: 0.8; line-height: 1.6;">Currently processing automated standings progression based on today's date in the 2026 IPL Schedule.</p>
-                    </div>
-                </div>
-                <div style="margin-top: 3rem; text-align: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 2rem;">
+                <div style="text-align: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 2rem;">
                     <h3 id="prob-indicator" style="color: var(--ipl-gold);">PROBABILITY: -</h3>
                 </div>
             </div>
         </main>
 
-        <!-- SECTION 2: Top 5 -->
+        <!-- TOP 5 -->
         <section id="top-5" class="content-section">
             <div class="top-4-grid" id="top-5-grid"></div>
         </section>
 
-        <!-- SECTION 3: Points Table (NEW) -->
+        <!-- POINTS TABLE -->
         <section id="points-table" class="content-section">
-            <h2 style="text-align: center; margin-bottom: 2rem; color: var(--ipl-gold);">Live Season Points Table</h2>
+            <h2 style="text-align: center; margin-bottom: 2rem; color: var(--ipl-gold);">Points Table</h2>
             <table class="pts-table">
-                <thead>
-                    <tr>
-                        <th>POS</th>
-                        <th>TEAM</th>
-                        <th>P</th>
-                        <th>W</th>
-                        <th>L</th>
-                        <th>NRR</th>
-                        <th>PTS</th>
-                    </tr>
-                </thead>
-                <tbody id="full-points-body">
-                    <!-- Dynamic Rows -->
-                </tbody>
+                <thead><tr><th>POS</th><th>TEAM</th><th>P</th><th>W</th><th>L</th><th>NRR</th><th>PTS</th></tr></thead>
+                <tbody id="full-points-body"></tbody>
             </table>
         </section>
 
-        <!-- SECTION 4: Challengers -->
+        <!-- FIXTURES -->
+        <section id="fixtures" class="content-section">
+            <h2 style="text-align: center; margin-bottom: 2rem; color: var(--ipl-gold);">Upcoming 2026 Fixtures</h2>
+            <div id="fixtures-container"></div>
+        </section>
+
+        <!-- CHALLENGERS -->
         <section id="challengers" class="content-section">
             <div class="top-4-grid" id="challengers-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));"></div>
             <div class="analysis-card" style="margin-top: 4rem; border: 2px solid var(--ipl-gold); text-align: center;">
-                <div class="winner-badge" style="background: linear-gradient(135deg, #ffd700, #ff8c00);">THE ULTIMATE VERDICT</div>
+                <div class="winner-badge">THE ULTIMATE VERDICT</div>
                 <h2 id="final-winner-verdict" style="font-size: 3rem; margin: 1.5rem 0;">-</h2>
-                <p style="opacity: 0.7; max-width: 800px; margin: 0 auto; line-height: 1.8;">
-                    This verdict is update automatically after every simulated or real match day in the 2026 season.
-                </p>
             </div>
         </section>
 
-        <!-- FOOTER -->
-        <div class="footer-info">
-            <div style="opacity: 0.4; font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase;">
-                Developed by RAM DHOTE<br>
-                © 2026 IPL Winner Prediction Engine™ • All Rights Reserved
-            </div>
-        </div>
+        <div class="footer-info"><div style="opacity: 0.4; font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase;">Developed by RAM DHOTE</div></div>
     </div>
 
     <script>
@@ -135,77 +102,55 @@
             try {
                 const response = await fetch('/api/data');
                 const data = await response.json();
-                
                 document.getElementById('last-updated').innerText = `LAST UPDATED: ${data.updated}`;
+                document.getElementById('champion-main').innerText = data.top_5[0].team;
+                document.getElementById('champion-description').innerText = `${data.top_5[0].team} leads the table after ${data.day_offset} days.`;
+                document.getElementById('champion-analysis').innerText = data.top_5[0].team;
+                document.getElementById('prob-indicator').innerText = `PROBABILITY: ${data.top_5[0].prob}%`;
                 
-                const winner = data.top_5[0];
-                document.getElementById('champion-main').innerText = winner.team;
-                document.getElementById('champion-description').innerText = `${winner.team} leads the table at Day ${data.day_offset} of the automated 2026 season.`;
-                
-                document.getElementById('champion-analysis').innerText = winner.team;
-                document.getElementById('prob-indicator').innerText = `EXPECTED WIN PROBABILITY: ${winner.prob}%`;
-                
-                // Top 5
                 const top5Grid = document.getElementById('top-5-grid');
                 top5Grid.innerHTML = '';
                 data.top_5.forEach((item, index) => {
-                    top5Grid.innerHTML += `
-                        <div class="analysis-card" style="border-left: 5px solid ${item.color}; position: relative;">
-                            <div class="rank-badge">${index + 1}</div>
-                            <h3>${item.team}</h3>
-                            <div class="win-index">${item.prob}%</div>
-                            <p style="opacity: 0.6; margin-top: 1rem;">Record: ${item.status}</p>
-                        </div>
-                    `;
+                    top5Grid.innerHTML += `<div class="analysis-card" style="border-left: 5px solid ${item.color}; position: relative;"><div class="rank-badge">${index + 1}</div><h3>${item.team}</h3><div class="win-index">${item.prob}%</div><p style="opacity: 0.6; margin-top: 1rem;">Record: ${item.status}</p></div>`;
                 });
 
-                // Points Table
                 const ptsBody = document.getElementById('full-points-body');
                 ptsBody.innerHTML = '';
                 data.points_table.forEach((team, index) => {
-                    const nrrClass = team.nrr >= 0 ? 'nrr-pos' : 'nrr-neg';
-                    ptsBody.innerHTML += `
-                        <tr>
-                            <td>${index + 1}</td>
-                            <td style="font-weight: 700;">${team.team}</td>
-                            <td>${team.p}</td>
-                            <td>${team.w}</td>
-                            <td>${team.l}</td>
-                            <td class="${nrrClass}">${team.nrr >= 0 ? '+' : ''}${team.nrr.toFixed(3)}</td>
-                            <td style="color: var(--ipl-gold); font-weight: 900;">${team.w * 2}</td>
-                        </tr>
-                    `;
+                    ptsBody.innerHTML += `<tr><td>${index + 1}</td><td style="font-weight: 700;">${team.team}</td><td>${team.p}</td><td>${team.w}</td><td>${team.l}</td><td class="${team.nrr >= 0 ? 'nrr-pos' : 'nrr-neg'}">${team.nrr >= 0 ? '+' : ''}${team.nrr.toFixed(3)}</td><td style="color: var(--ipl-gold); font-weight: 900;">${team.w * 2}</td></tr>`;
                 });
 
-                // Challengers
-                const challengersGrid = document.getElementById('challengers-grid');
-                challengersGrid.innerHTML = '';
-                data.challengers.forEach(item => {
-                    challengersGrid.innerHTML += `
-                        <div class="analysis-card" style="border-left: 3px solid ${item.color}; padding: 1.5rem;">
-                            <h3>${item.team}</h3>
-                            <div style="font-size: 1.5rem; color: var(--ipl-gold);">${item.prob}%</div>
+                // Fixtures
+                const fixes = document.getElementById('fixtures-container');
+                fixes.innerHTML = '';
+                data.upcoming.forEach(f => {
+                    fixes.innerHTML += `
+                        <div class="fixture-card">
+                            <div style="flex: 1; text-align: right; font-weight: 800;">${f.t1}</div>
+                            <div style="margin: 0 2rem;"><div class="vs-circle">VS</div></div>
+                            <div style="flex: 1; text-align: left; font-weight: 800;">${f.t2}</div>
+                            <div style="margin-left: 2rem; opacity: 0.6; font-size: 0.8rem; text-align: right;">${f.date}<br>${f.venue}</div>
                         </div>
                     `;
                 });
 
+                const challengersGrid = document.getElementById('challengers-grid');
+                challengersGrid.innerHTML = '';
+                data.challengers.forEach(item => {
+                    challengersGrid.innerHTML += `<div class="analysis-card" style="border-left: 3px solid ${item.color}; padding: 1.5rem;"><h3>${item.team}</h3><div style="font-size: 1.5rem; color: var(--ipl-gold);">${item.prob}%</div></div>`;
+                });
                 document.getElementById('final-winner-verdict').innerText = data.verdict;
-
-            } catch (error) {
-                console.error("Real-time sync failed.", error);
-            }
+            } catch (error) { console.error("Sync failed.", error); }
         }
 
         function showSection(sectionId) {
             document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
             document.getElementById(sectionId).classList.add('active');
-            
             document.querySelectorAll('.nav-btn').forEach(btn => {
                 btn.classList.remove('active');
                 if(btn.getAttribute('onclick').includes(sectionId)) btn.classList.add('active');
             });
         }
-
         fetchRealTimeData();
     </script>
 </body>

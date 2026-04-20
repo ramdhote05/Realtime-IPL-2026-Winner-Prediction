@@ -11,7 +11,7 @@ static_dir = os.path.join(base_dir, 'static')
 app = Flask(__name__, template_folder=template_dir, static_folder=static_dir)
 CORS(app)
 
-# All 10 Teams for the Real-Time Points Table
+# Base Standings as of April 20
 TEAMS_DB = [
     {"team": "Punjab Kings", "p": 6, "w": 5, "l": 1, "nrr": 1.250, "color": "#dd0000"},
     {"team": "RCB", "p": 6, "w": 4, "l": 2, "nrr": 0.850, "color": "#d11d26"},
@@ -25,18 +25,23 @@ TEAMS_DB = [
     {"team": "Mumbai Indians", "p": 6, "w": 1, "l": 5, "nrr": -1.350, "color": "#004ba0"}
 ]
 
+UPCOMING_MATCHES = [
+    {"match": 35, "t1": "PBKS", "t2": "RR", "date": "April 21", "venue": "Mullanpur"},
+    {"match": 36, "t1": "RCB", "t2": "SRH", "date": "April 22", "venue": "Bengaluru"},
+    {"match": 37, "t1": "KKR", "t2": "CSK", "date": "April 23", "venue": "Kolkata"},
+    {"match": 38, "t1": "DC", "t2": "LSG", "date": "April 24", "venue": "Delhi"},
+    {"match": 39, "t1": "GT", "t2": "RR", "date": "April 25", "venue": "Ahmedabad"}
+]
+
 def get_automated_standings():
-    # Convert UTC to IST (Add 5 hours and 30 minutes)
     utc_now = datetime.datetime.now(datetime.timezone.utc)
     ist_now = utc_now + datetime.timedelta(hours=5, minutes=30)
     
-    # Baseline: April 20, 2026
     start_date = datetime.datetime(2026, 4, 20, tzinfo=datetime.timezone.utc)
     days_passed = (utc_now - start_date).days
     
     current_table = [dict(t) for t in TEAMS_DB]
 
-    # Automated Season Evolution
     if days_passed > 0:
         random.seed(days_passed)
         for _ in range(days_passed):
@@ -54,12 +59,7 @@ def get_automated_standings():
     for i in range(5):
         team = sorted_table[i]
         prob = round((team['w'] / team['p'] if team['p'] > 0 else 0) * 80 + (team['nrr'] * 10), 1)
-        top_5.append({
-            "team": team['team'],
-            "prob": prob,
-            "status": f"{team['w']}-{team['l']}",
-            "color": team['color']
-        })
+        top_5.append({"team": team['team'], "prob": prob, "status": f"{team['w']}-{team['l']}", "color": team['color']})
 
     challengers = []
     for i in range(5, 10):
@@ -67,16 +67,14 @@ def get_automated_standings():
         prob = round((team['w'] / team['p'] if team['p'] > 0 else 0) * 40, 1)
         challengers.append({"team": team['team'], "prob": prob, "color": team['color']})
 
-    match_finished = ist_now.hour >= 23 and ist_now.minute >= 30
-    
     return {
-        "updated": ist_now.strftime("%Y-%m-%d %H:%M:%S"), # Now in IST
+        "updated": ist_now.strftime("%Y-%m-%d %H:%M:%S"),
         "points_table": sorted_table,
+        "upcoming": UPCOMING_MATCHES,
         "top_5": top_5,
         "challengers": challengers,
         "verdict": sorted_table[0]['team'],
-        "day_offset": days_passed,
-        "match_status": "GT vs MI Result Incorporated" if match_finished else "Awaiting Match Result"
+        "day_offset": days_passed
     }
 
 @app.route('/')
