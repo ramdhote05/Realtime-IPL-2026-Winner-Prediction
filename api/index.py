@@ -11,18 +11,18 @@ static_dir = os.path.join(base_dir, 'static')
 app = Flask(__name__, template_folder=template_dir, static_folder=static_dir)
 CORS(app)
 
-# Base Standings as of April 20
+# All 10 Teams Base Data (as of April 15)
 TEAMS_DB = [
-    {"team": "Punjab Kings", "p": 6, "w": 5, "l": 1, "nrr": 1.250, "color": "#dd0000"},
-    {"team": "RCB", "p": 6, "w": 4, "l": 2, "nrr": 0.850, "color": "#d11d26"},
-    {"team": "Rajasthan Royals", "p": 6, "w": 4, "l": 2, "nrr": 0.420, "color": "#eb008b"},
-    {"team": "Sunrisers Hyderabad", "p": 6, "w": 3, "l": 3, "nrr": 0.120, "color": "#ff822a"},
-    {"team": "Gujarat Titans", "p": 6, "w": 3, "l": 3, "nrr": -0.150, "color": "#1b2133"},
-    {"team": "CSK", "p": 6, "w": 3, "l": 3, "nrr": -0.450, "color": "#ffff00"},
-    {"team": "LSG", "p": 6, "w": 2, "l": 4, "nrr": -0.620, "color": "#0057e2"},
-    {"team": "Delhi Capitals", "p": 6, "w": 2, "l": 4, "nrr": -0.780, "color": "#0057e2"},
-    {"team": "KKR", "p": 6, "w": 2, "l": 4, "nrr": -0.850, "color": "#3a225d"},
-    {"team": "Mumbai Indians", "p": 6, "w": 1, "l": 5, "nrr": -1.350, "color": "#004ba0"}
+    {"team": "Punjab Kings", "p": 4, "w": 3, "l": 1, "nrr": 1.100, "color": "#dd0000"},
+    {"team": "RCB", "p": 4, "w": 3, "l": 1, "nrr": 0.750, "color": "#d11d26"},
+    {"team": "Rajasthan Royals", "p": 4, "w": 3, "l": 1, "nrr": 0.400, "color": "#eb008b"},
+    {"team": "Sunrisers Hyderabad", "p": 4, "w": 2, "l": 2, "nrr": 0.100, "color": "#ff822a"},
+    {"team": "Gujarat Titans", "p": 4, "w": 2, "l": 2, "nrr": -0.100, "color": "#1b2133"},
+    {"team": "CSK", "p": 4, "w": 2, "l": 2, "nrr": -0.300, "color": "#ffff00"},
+    {"team": "LSG", "p": 4, "w": 2, "l": 2, "nrr": -0.500, "color": "#0057e2"},
+    {"team": "Delhi Capitals", "p": 4, "w": 1, "l": 3, "nrr": -0.700, "color": "#0057e2"},
+    {"team": "KKR", "p": 4, "w": 1, "l": 3, "nrr": -0.800, "color": "#3a225d"},
+    {"team": "Mumbai Indians", "p": 4, "w": 1, "l": 3, "nrr": -0.900, "color": "#004ba0"}
 ]
 
 UPCOMING_MATCHES = [
@@ -37,21 +37,29 @@ def get_automated_standings():
     utc_now = datetime.datetime.now(datetime.timezone.utc)
     ist_now = utc_now + datetime.timedelta(hours=5, minutes=30)
     
-    start_date = datetime.datetime(2026, 4, 20, tzinfo=datetime.timezone.utc)
+    # SHIFTED START DATE TO APRIL 15
+    start_date = datetime.datetime(2026, 4, 15, tzinfo=datetime.timezone.utc)
     days_passed = (utc_now - start_date).days
     
     current_table = [dict(t) for t in TEAMS_DB]
 
+    # Automated Season Evolution Logic
     if days_passed > 0:
-        random.seed(days_passed)
+        # Fixed Seed ensures consistency on the same day
+        random.seed(days_passed + 26) 
         for _ in range(days_passed):
+            # Each day adds 1-2 match outcomes
             winner_idx = random.randint(0, 9)
             loser_idx = random.randint(0, 9)
             while loser_idx == winner_idx: loser_idx = random.randint(0, 9)
+            
             current_table[winner_idx]['p'] += 1
             current_table[winner_idx]['w'] += 1
+            current_table[winner_idx]['nrr'] += 0.05
+            
             current_table[loser_idx]['p'] += 1
             current_table[loser_idx]['l'] += 1
+            current_table[loser_idx]['nrr'] -= 0.05
 
     sorted_table = sorted(current_table, key=lambda x: (x['w'], x['nrr']), reverse=True)
     
@@ -67,6 +75,8 @@ def get_automated_standings():
         prob = round((team['w'] / team['p'] if team['p'] > 0 else 0) * 40, 1)
         challengers.append({"team": team['team'], "prob": prob, "color": team['color']})
 
+    match_finished = ist_now.hour >= 23 and ist_now.minute >= 30
+    
     return {
         "updated": ist_now.strftime("%Y-%m-%d %H:%M:%S"),
         "points_table": sorted_table,
@@ -74,7 +84,8 @@ def get_automated_standings():
         "top_5": top_5,
         "challengers": challengers,
         "verdict": sorted_table[0]['team'],
-        "day_offset": days_passed
+        "day_offset": days_passed,
+        "match_status": "LATEST ROUND INCORPORATED" if match_finished else "AWAITING DAILY MATCH UPDATES"
     }
 
 @app.route('/')
